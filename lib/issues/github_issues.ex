@@ -5,7 +5,6 @@ defmodule Issues.GithubIssues do
   alias HTTPotion.Response, as: Response
 
   def fetch(user, project) do
-    IO.puts issues_url(user, project)
     case HTTPotion.get(issues_url(user, project), @user_agent) do
       Response[body: body, status_code: status, headers: _headers ]
       when status in 200..299 ->
