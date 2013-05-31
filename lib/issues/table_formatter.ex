@@ -5,7 +5,7 @@ defmodule Issues.TableFormatter do
   headers. Prints a table to STDOUT of the data from each row
   identified by each header. That is, rach header identifies a column,
   and those columns are extracted and printed from the rows.
- 	
+
   We calculate the width of each column to fit the longest element
   in that column.
   """
@@ -24,7 +24,7 @@ defmodule Issues.TableFormatter do
   of columns, return a list containing lists of the data in
   each column. The `headers` parameter contains the
   list of columns to extract
- 	
+  
   ## Example
       iex> list = [ [ {"a", "1"}, {"b", "2"}, {"c", "3"}],
       ...>          [ {"a", "4"}, {"b", "5"}, {"c", "6"}] ]
@@ -74,12 +74,11 @@ defmodule Issues.TableFormatter do
  	
   ## Example
       iex> widths = [5,6,99]
- 	
       iex> Issues.TableFormatter.format_for(widths)
     "~-5s | ~-6s | ~-99s~n"
   """
   def format_for(column_widths) do
-    Enum.map_join(column_widths, " | ", fn width -> "~#{width}s" end) <> "~n"
+    Enum.map_join(column_widths, " | ", fn width -> "~-#{width}s" end) <> "~n"
   end
  
   @doc """
@@ -88,7 +87,6 @@ defmodule Issues.TableFormatter do
  	
  	
   ## Example
- 	
       iex> widths = [5,6,9]
       iex> Issues.TableFormatter.separator(widths)
       "------+--------+----------"
