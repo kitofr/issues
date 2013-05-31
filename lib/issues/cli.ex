@@ -7,6 +7,8 @@ defmodule Issues.CLI do
   table of the last _n_ issues in a github project
   """
   
+  import Issues.TableFormatter, only: [ print_table_for_columns: 2 ]
+
   def run(argv) do
     argv
       |> parse_args
@@ -22,8 +24,7 @@ defmodule Issues.CLI do
   Return a tuple of `{ user, project, count }`, or `:help` if help was given.
   """
   def parse_args(argv) do
-    parse = OptionParser.parse(argv, switches: [ help: :boolean ],
-                                     aliases: [ h: :help])
+    parse = OptionParser.parse(argv, switches: [ help: :boolean ], aliases: [ h: :help])
     case parse do
       { [ help: true ], _ }           -> :help
       { _, [ user, project, count ] } -> { user, project, binary_to_integer(count) }
@@ -44,6 +45,8 @@ defmodule Issues.CLI do
       |> decode_response
       |> convert_to_list_of_hashdicts
       |> sort_into_ascending_order
+      |> Enum.take(count)
+      |> print_table_for_columns(["number", "created_at", "title"])
   end
 
   def decode_response({:ok, body}), do: Jsonex.decode(body)
@@ -59,7 +62,7 @@ defmodule Issues.CLI do
 
   def sort_into_ascending_order(list_of_issues) do
     Enum.sort list_of_issues,
-              fn i1, i2 -> i1["created_at"] < i2["created_at"] end
+      fn i1, i2 -> i1["created_at"] < i2["created_at"] end
   end
 end
 
